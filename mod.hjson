@@ -3,6 +3,6 @@ name: nsn
 author: Mythril
 description: Randomly generates names for numbered sectors.
 version: 1.0.0
-minGameVersion: 146
+minGameVersion: 147
 repo: Mythril382/NumberedSectorNames
 hidden: true
