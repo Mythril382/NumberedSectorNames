@@ -121,7 +121,7 @@ function generateWord(size, r){
 }
 
 function generateName(sector){
-    let r = new Rand(sector.id + sector.planet.seed);
+    let r = new Rand(sector.id);
     let out = "";
     let difficulty = "";
     if(r.chance(0.5)){
