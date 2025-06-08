@@ -2,7 +2,8 @@ displayName: Numbered Sector Names
 name: nsn
 author: Mythril
 description: Randomly generates names for numbered sectors.
-version: 1.0.0
+version: 2.0.0
+subtitle: v2.0.0
 minGameVersion: 147
 repo: Mythril382/NumberedSectorNames
 hidden: true
