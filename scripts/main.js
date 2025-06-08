@@ -157,7 +157,7 @@ function generateName(sector){
     let out = "";
     let difficulty = "";
     if(rand.chance(0.5)){
-        difficulty = difficultyPrefix.get(Mathf.clamp(Math.floor(sector.threat / 0.25)), 0, difficultyPrefix.size - 1).random(rand);
+        difficulty = difficultyPrefix.get(Mathf.clamp(Math.floor(sector.threat / 0.25), 0, difficultyPrefix.size - 1)).random(rand);
     }
     let suffix = sector.hasEnemyBase() ? attackSuffix.random(rand) : survivalSuffix.random(rand);
     let word = generate(rand);
