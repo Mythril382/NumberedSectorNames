@@ -1,53 +1,83 @@
-/* Entire thing taken from the Random Mindustry mod. */
-let lastLetter = null;
-
-let vowels = Seq.with(
-    "a", "e", "i", "o", "u"
-);
+let maxSyllables = 3;
 
 let consonants = Seq.with(
     "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"
 );
 
-let vowelsAvoid = ObjectMap.of(
-    "a", Seq.with("j", "q", "x", "z"),
-    "e", Seq.with("j", "q", "x", "z"),
-    "i", Seq.with("j", "q", "x", "z"),
-    "o", Seq.with("j", "q", "x", "z"),
-    "u", Seq.with("j", "q", "x", "z")
+let vowels = Seq.with(
+    "a", "e", "i", "o", "u"
 );
 
-let consonantsAvoid = ObjectMap.of(
-    "c", Seq.with("e", "i"),
-    "g", Seq.with("e", "i"),
-    "h", Seq.with("u"),
-    "j", Seq.with("e", "i"),
-    "k", Seq.with("e"),
-    "q", Seq.with("e", "i"),
-    "v", Seq.with("o", "u"),
-    "w", Seq.with("i"),
-    "y", Seq.with("i"),
-    "z", Seq.with("a")
+let initialOnsets = Seq.with(
+    "b", "d", "f", "g", "h", "j", "c", "l", "m", "n", "p", "r", "s", "t", "v", "w", "y", "z", "th", "sh", "ch",
+    "pl", "bl", "cl", "gl", "pr", "br", "tr", "dr", "cr", "gr", "tw", "qu", "pw",
+    "fl", "sl", "thl", "schl", "fr", "thr", "shr", "wh", "sw", "thw", "voi",
+    "pu", "pew", "beau", "tu", "tew", "du", "dew", "mu", "mew", "new", "nu", "few", "fu", "view", "thew", "sui", "zeu", "hu", "hew", "lu", "lew",
+    "st", "sp", "sk",
+    "sm", "sn",
+    "sph", "sth",
+    "spl", "scl", "spr", "str", "scr", "squ", "spu", "spew", "stu", "stew", "skew",
+    "smew", "smu", "snew", "snu",
+    "sphr"
 );
 
-let initialTmp = Seq.with(
-    "cvc", "vcv", "cv", "vc", "c", "v"
-);
-
-let consonantTmp = Seq.with(
-    "vcv", "vc", "v"
-);
-
-let vowelTmp = Seq.with(
-    "cvc", "cv", "c"
+let medialOnsets = Seq.with(
+    "b", "d", "f", "g", "h", "j", "c", "l", "m", "n", "p", "r", "s", "t", "v", "w", "y", "z", "th", "sh", "ch",
+    "pl", "bl", "cl", "gl", "pr", "br", "tr", "dr", "cr", "gr",
+    "fl", "sl", "fr", "thr", "shr", "sw",
+    "st", "sp", "sk",
+    "sm", "sn",
+    "sph", "sth",
+    "spl", "spr", "str", "scr"
 );
 
 let difficultyPrefix = Seq.with(
-    Seq.with("Wasted", "Weak", "Pointless", "Dead"),
+    Seq.with("Wasted", "Weak", "Pointless", "Pathetic"),
     Seq.with("Moderate", "Understandable", "Armored", "Rebuilt"),
     Seq.with("Enforced", "Powered", "Crazy"),
     Seq.with("Reinforced", "Insane"),
     Seq.with("Feared", "Absolute", "Absolutely Insane")
+);
+
+let nuclei = Seq.with(
+    "a", "e", "i", "o", "u", "ow", "ou", "ie", "igh", "oi", "oo", "ea", "ee"
+);
+
+let nucleiOnset = Seq.with(
+    "ie", "igh", "ay", "eer", "air", "ure"
+);
+
+let nucleiCoda = Seq.with(
+    "ou", "oo", "ea", "ee"
+);
+
+let codas = Seq.with(
+    "b", "d", "f", "g", "c", "l", "m", "n", "p", "r", "s", "t", "v", "y", "z", "ng", "th", "sh", "ch",
+    "lp", "lb", "lt", "ld", "lch", "lge", "lk",
+    "rp", "rb", "rt", "rd", "rch", "rge", "rk", "rg", "rgue",
+    "lf", "lve", "lth", "lse", "lls", "lsh",
+    "rf", "rve", "rth", "rce", "rs", "rsh",
+    "lm", "ln",
+    "rm", "rn", "rl",
+    "mp", "nt", "nd", "nch", "nge", "nk",
+    "mph", "mes", "mth", "nf", "nth", "nce", "nze", "ngs", "ngth",
+    "ft", "sp", "st", "sk", "shed",
+    "zed", "thed",
+    "fth", "fths",
+    "pt", "kt",
+    "pts", "kts",
+    "pth", "pse", "bbs", "ts", "dth", "dze", "x", "ggs",
+    "lmd", "lpt", "lps", "lfth", "ltz", "lst", "lct", "lx",
+    "rmed", "rmth", "rpt", "rpse", "rned", "rtz", "rst", "rld", "rct", "rks",
+    "mpt", "mpse", "ntz", "ndth", "nct", "nx", "ngth",
+    "ndths",
+    "mt", "md", "nged",
+    "xth", "xt",
+    "xths", "xthed", "xts"
+);
+
+let bridges = Seq.with(
+    "b", "c", "d", "ph", "ck", "l", "m", "n", "p", "s", "t", "v", "z"
 );
 
 let survivalSuffix = Seq.with(
@@ -78,66 +108,80 @@ function vowel(l){
     return vowels.contains(l != null ? l : "");
 }
 
-function generateSyllable(r){
-    let tmp;
-    if(consonant(lastLetter)){
-        tmp = consonantTmp.random(r);
-    }else if(vowel(lastLetter)){
-        tmp = vowelTmp.random(r);
-    }else{
-        tmp = initialTmp.random(r);
-    }
+function generateSyllable(rand, first, last){
     let out = "";
-    for(let i = 0; i < tmp.length; i++){
-        let letter;
-        if(tmp.charAt(i) == "c"){
-            let picked = consonants.copy();
-            if(lastLetter != null && consonantsAvoid.containsKey(lastLetter)){
-                picked.removeAll(consonantsAvoid.get(lastLetter));
-            }
-            letter = picked.random(r);
+    
+    let onsets = first ? initialOnsets : medialOnsets;
+    
+    let nextFloat = rand.nextFloat();
+    if(first && last){
+        if(nextFloat < 0.1){
+            out += onsets.random(rand);
+            out += nucleiOnset.random(rand);
+        }else if(nextFloat < 0.2){
+            out += nucleiCoda.random(rand);
+            out += codas.random(rand);
         }else{
-            let picked = vowels.copy();
-            if(lastLetter != null && vowelsAvoid.containsKey(lastLetter)){
-                picked.removeAll(vowelsAvoid.get(lastLetter));
-            }
-            letter = picked.random(r);
+            out += onsets.random(rand);
+            out += nuclei.random(rand);
+            out += codas.random(rand);
         }
-        out += letter;
-        lastLetter = letter;
+    }else if(nextFloat < 0.1 || !last){
+        out += onsets.random(rand);
+        out += nucleiOnset.random(rand);
+    }else if(nextFloat < 0.2 && !last){
+        out += nucleiCoda.random(rand);
+        out += codas.random(rand);
+    }else{
+        out += onsets.random(rand);
+        out += nuclei.random(rand);
+        out += codas.random(rand);
     }
+    
     return out;
 }
 
-function uppercaseFirst(str){
-    return str.substring(0, 1).toUpperCase() + str.substring(1);
-}
-
-function generateWord(size, r){
+function generate(rand){
     let out = "";
-    for(let i = 0; i < size; i++) out += generateSyllable(r);
-    lastLetter = null;
-    return uppercaseFirst(out);
+    
+    let syllables = rand.random(1, maxSyllables);
+    for(let i = 0; i < syllables; i++){
+        out += generateSyllable(rand, i == 0, i == syllables - 1);
+    }
+    
+    return out.substring(0, 1).toUpperCase() + out.substring(1);
 }
 
 function generateName(sector){
-    let r = new Rand(sector.id);
+    let rand = new Rand(sector.id);
     let out = "";
     let difficulty = "";
-    if(r.chance(0.5)){
-        difficulty = difficultyPrefix.get(sector.threat / 0.25).random(r);
+    if(rand.chance(0.5)){
+        difficulty = difficultyPrefix.get(Mathf.clamp(Math.floor(sector.threat / 0.25)), 0, difficultyPrefix.size - 1).random(rand);
     }
-    let suffix = sector.hasEnemyBase() ? attackSuffix.random(r) : survivalSuffix.random(r);
-    let word = generateWord(r.random(1, 5), r);
-    let wordType = r.random(1);
+    let suffix = sector.hasEnemyBase() ? attackSuffix.random(rand) : survivalSuffix.random(rand);
+    let word = generate(rand);
+    let wordType = rand.random(1);
     if(wordType >= 0.66){
-        out += difficulty + " " + suffix + " of " + word;
+        if(difficulty.length > 0){
+            out += difficulty + " " + suffix + " of " + word;
+        }else{
+            out += suffix + " of " + word;
+        }
     }else if(wordType >= 0.33){
-        out += difficulty + " " + word + " " + suffix;
+        if(difficulty.length > 0){
+            out += difficulty + " " + word + " " + suffix;
+        }else{
+            out += word + " " + suffix;
+        }
     }else{
-        out += word + " the " + difficulty + " " + suffix;
+        if(difficulty.length > 0){
+            out += word + " the " + difficulty + " " + suffix;
+        }else{
+            out += word + " the " + suffix;
+        }
     }
-    sector.setName(out + " [darkgray](" + sector.id + ")");
+    sector.setName(out);
 }
 
 Events.on(ClientLoadEvent, e => {
